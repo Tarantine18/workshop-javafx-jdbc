@@ -69,8 +69,8 @@ public class MainViewController implements Initializable{
 			
 			
 			
-		    T controller1 = loader.getController();
-		    inicialActing.accept(controller1);
+		    T controller = loader.getController();
+		    inicialActing.accept(controller);
 			
 			}
 			catch(IOException e) {
