@@ -10,5 +10,13 @@ public class Ultils {
 		return (Stage) ((Node)event.getSource()).getScene().getWindow();
 	}
 	
+	public static Integer tryParseToInt(String stg) {
+		try {
+			return Integer.parseInt(stg);
+		}
+		catch(NumberFormatException e) {
+			return null;
+		}
+	}
 	
 }
