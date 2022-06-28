@@ -3,7 +3,9 @@ package gui;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import db.DbException;
 import gui.listeners.DataChangeListener;
@@ -18,6 +20,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import model.entities.Department;
+import model.exeptions.ValidationsExeptions;
 import model.services.DepartmentServices;
 
 public class DepartmentFormController implements Initializable {
@@ -61,6 +64,9 @@ public class DepartmentFormController implements Initializable {
 			notitfyDataChangedListeterns();
 			Ultils.currentStage(event).close();
 		}
+		catch(ValidationsExeptions e) {
+			setErroorMessages(e.getErros());
+		}
 		catch(DbException e) {
 			Alerts.showAlert("erro saving obj", null, e.getMessage(), AlertType.ERROR);
 		}
@@ -77,8 +83,19 @@ public class DepartmentFormController implements Initializable {
 	private Department getFormData() {
 	
 		Department obj = new Department();
+		
+		ValidationsExeptions exeption = new ValidationsExeptions("validations erro");
 		obj.setId(Ultils.tryParseToInt(txtId.getText()));
+		
+		if(txtName.getText() == null || txtName.getText().trim().equals("")) {
+			exeption.addError("name", "field cannot be empty");
+		}
 		obj.setName(txtName.getText());
+		
+		if(exeption.getErros().size() > 0) {
+			throw exeption;
+		}
+		
 		return obj;
 		
 		
@@ -96,9 +113,6 @@ public class DepartmentFormController implements Initializable {
 		dataChangeListeners.add(listeners);	
 	}
 	
-	
-	
-	
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
 		initializeNodes();
@@ -115,6 +129,15 @@ public class DepartmentFormController implements Initializable {
 		}
 		txtId.setText(String.valueOf(entity.getId()));
 		txtName.setText(entity.getName());
+	}
+	
+	public void setErroorMessages(Map<String,String> erros) {
+		Set<String> fields = erros.keySet();
+		
+		if(fields.contains("name")) {
+			labelErroName.setText(erros.get("name"));
+		}
+		
 	}
 
 }
