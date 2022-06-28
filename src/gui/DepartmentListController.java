@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import application.Main;
+import gui.listeners.DataChangeListener;
 import gui.util.Alerts;
 import gui.util.Ultils;
 import javafx.collections.FXCollections;
@@ -26,7 +27,7 @@ import javafx.stage.Stage;
 import model.entities.Department;
 import model.services.DepartmentServices;
 
-public class DepartmentListController implements Initializable{
+public class DepartmentListController implements Initializable,DataChangeListener{
 
 	
 	private DepartmentServices service;
@@ -93,6 +94,7 @@ public class DepartmentListController implements Initializable{
             controller.setDepartment(obj);
             controller.updateFormDate();
             controller.setDepartmentServices(new DepartmentServices());
+            controller.subscribeDataChangeListeners(this);
             controller.updateFormDate();
             
             
@@ -109,5 +111,10 @@ public class DepartmentListController implements Initializable{
 		catch(IOException e) {
 			Alerts.showAlert("IOExeption", "Erro load View",e.getMessage(), AlertType.ERROR);
 		}
+	}
+
+	@Override
+	public void onDataChanged() {
+     updateTableView();		
 	}
 }
