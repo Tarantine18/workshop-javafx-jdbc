@@ -29,11 +29,10 @@ public class MainViewController implements Initializable{
 	
 	@FXML
 	private MenuItem menuItemAbout;
-	
 	@FXML
 	public void onMenuItemSellerAction() {
 		loadView("/gui/SellerList.fxml", (SellerListController controller) -> {
-			controller.setSellerService(new SellerServices());
+			controller.setServices(new SellerServices(), new DepartmentServices());
 			controller.updateTableView();
 		});
 		

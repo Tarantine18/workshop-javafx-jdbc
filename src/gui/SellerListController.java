@@ -31,11 +31,14 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.entities.Seller;
+import model.services.DepartmentServices;
 import model.services.SellerServices;
 
 public class SellerListController implements Initializable, DataChangeListener {
 
 	private SellerServices service;
+	
+	private DepartmentServices departmentService;
 
 	@FXML
 	private TableView<Seller> tableViewSeller;
@@ -75,8 +78,9 @@ public class SellerListController implements Initializable, DataChangeListener {
 
 	}
 
-	public void setSellerService(SellerServices service) {
+	public void setServices(SellerServices service, DepartmentServices departmentServices) {
 		this.service = service;
+		this.departmentService = departmentServices;
 	}
 
 	@Override
@@ -118,7 +122,8 @@ public class SellerListController implements Initializable, DataChangeListener {
 			SellerFormController controller = loader.getController();
 			controller.setSeller(obj);
 			controller.updateFormDate();
-			controller.setSellerServices(new SellerServices());
+			controller.setServices(new SellerServices(), new DepartmentServices());
+			controller.loadAssosiatedObject();
 			controller.subscribeDataChangeListeners(this);
 			controller.updateFormDate();
 
@@ -189,6 +194,7 @@ public class SellerListController implements Initializable, DataChangeListener {
 				updateTableView();
 			}
 			catch(DbIntegrityException e) {
+				e.printStackTrace();
 				Alerts.showAlert("Error remove obj", null, e.getMessage(), AlertType.ERROR);
 			}
 			
