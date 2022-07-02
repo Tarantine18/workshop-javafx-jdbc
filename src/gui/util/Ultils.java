@@ -27,7 +27,15 @@ public class Ultils {
 			return null;
 		}
 	}
-
+	public static Double tryParseToDouble(String doub) {
+		try {
+			return Double.parseDouble(doub);
+		} catch (NumberFormatException e) {
+			return  null;
+		}
+	}
+	
+	
 	public static <T> void formatTableColumnDate(TableColumn<T, Date> tableColumn, String format) {
 		tableColumn.setCellFactory(column -> {
 			TableCell<T, Date> cell = new TableCell<T, Date>() {

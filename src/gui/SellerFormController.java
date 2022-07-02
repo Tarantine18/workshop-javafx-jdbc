@@ -1,9 +1,11 @@
 package gui;
 
 import java.net.URL;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -126,15 +128,38 @@ public class SellerFormController implements Initializable {
 			exeption.addError("name", "field cannot be empty");
 		}
 		obj.setName(txtName.getText());
-
+		
+		if (txtEmail.getText() == null || txtEmail.getText().trim().equals("")) {
+			exeption.addError("email", "field cannot be empty");
+		}
+		obj.setEmail(txtEmail.getText());
+		
+		if(dpBirthDate.getValue() == null) {
+			exeption.addError("birthDate", "field cannot be empty");
+		}
+		
+		else {
+		Instant instant = Instant.from(dpBirthDate.getValue().atStartOfDay(ZoneId.systemDefault()));
+		obj.setBirthDate(Date.from(instant));
+		}
+		if (txtBaseSalary.getText() == null || txtBaseSalary.getText().trim().equals("")) {
+			exeption.addError("baseSalary", "field cannot be empty");
+		}
+		
+		obj.setBaseSalary(Ultils.tryParseToDouble(txtBaseSalary.getText()));
+		
+		obj.setDepartment(comboBoxDepartment.getValue());
+		
 		if (exeption.getErros().size() > 0) {
 			throw exeption;
 		}
-
 		return obj;
-
+		
 	}
-
+		
+		
+		
+		
 	public void onBtCancelAction(ActionEvent event) {
 		Ultils.currentStage(event).close();
 	}
@@ -196,10 +221,14 @@ public class SellerFormController implements Initializable {
 	public void setErroorMessages(Map<String, String> erros) {
 		Set<String> fields = erros.keySet();
 
-		if (fields.contains("name")) {
-			labelErroName.setText(erros.get("name"));
-		}
-
+		labelErroName.setText(fields.contains("name") ? erros.get("name") : "");
+		labelErroEmail.setText(fields.contains("email") ? erros.get("email") : "");
+		labelErroBirthDate.setText(fields.contains("birthDate") ? erros.get("birthDate") : "");
+		labelErroBaseSalary.setText(fields.contains("baseSalary") ? erros.get("baseSalary") : "");
+		
+		
+		
+		
 	}
 
 	private void initializeComboBoxDepartment() {
